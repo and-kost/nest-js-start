@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Req, Res, Put, Delete, Param, ParseIntPipe, Body } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  Put,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Body,
+  HttpCode,
+  HttpStatus
+} from '@nestjs/common'
 import { Response, Request } from 'express'
 
 import { UserService } from './user.service'
@@ -11,12 +24,10 @@ export class UserController {
   ) {}
 
   @Get('/')
-  async getAllUsers(
-    @Res() res: Response,
-  ) {
+  @HttpCode(HttpStatus.OK)
+  async getAllUsers() {
     const users = await this.userService.getAllUsers()
-
-    return res.send(users)
+    return users
   }
 
   @Get('/:id')
@@ -35,7 +46,7 @@ export class UserController {
     @Res() res: Response,
   ) {
     await this.userService.createUser(req.body)
-    return res.sendStatus(201)
+    return res.sendStatus(HttpStatus.CREATED)
   }
 
   @Put('/:id')
@@ -45,7 +56,7 @@ export class UserController {
     @Res() res: Response,
   ) {
     this.userService.updateUserData(id, body)
-    return res.sendStatus(204)
+    return res.sendStatus(HttpStatus.NO_CONTENT)
   }
 
   @Delete('/:id')
@@ -54,6 +65,6 @@ export class UserController {
     @Res() res: Response,
   ) {
     this.userService.deleteUser(id)
-    return res.sendStatus(204)
+    return res.sendStatus(HttpStatus.NO_CONTENT)
   }
 }
